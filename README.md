@@ -121,13 +121,17 @@ On a circular binary with Velocity Verlet, relative energy error after thousands
 | No Barnes–Hut / GPU | Correctness and readability over large-N performance |
 | Simulation units with \(G=1\) | Removes clutter; easy to rescale |
 
+## Repository
+
+**https://github.com/jaysit-gif/N-body-Simulator**
+
 ## GitHub Pages
 
-1. Push this repo to GitHub.
-2. Settings → Pages → Deploy from branch `main` / root (or `/docs` if you move files).
-3. Site will be at `https://<user>.github.io/<repo>/`.
+1. Repo Settings → **Pages** → Source: **Deploy from a branch**
+2. Branch: `main` / folder: `/ (root)` → Save
+3. Live site: **https://jaysit-gif.github.io/N-body-Simulator/**
 
-If the repo is not at the domain root, relative paths in this project already work.
+Relative asset paths in this project work with that base URL.
 
 ## License
 
