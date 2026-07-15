@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Educational 2D N-body gravity simulator with Velocity Verlet integration and live energy conservation diagnostics."
+    />
+    <title>N-Body Lab — Newtonian Gravity Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <h1>N-Body Lab</h1>
+            <p class="tagline">Newtonian gravity · energy-aware integrators</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button type="button" id="btn-play" class="btn primary" aria-pressed="true">Pause</button>
+          <button type="button" id="btn-reset" class="btn">Reset</button>
+          <button type="button" id="btn-zoom-out" class="btn icon" title="Zoom out (−)">−</button>
+          <button type="button" id="btn-zoom-in" class="btn icon" title="Zoom in (+)">+</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="viewport" aria-label="Simulation viewport">
+          <canvas id="sim-canvas"></canvas>
+          <div class="viewport-hint">
+            Space play/pause · R reset · scroll zoom
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="panel">
+            <h2>Scenario</h2>
+            <label class="field">
+              <span>Preset</span>
+              <select id="preset"></select>
+            </label>
+            <p id="preset-desc" class="desc"></p>
+          </section>
+
+          <section class="panel">
+            <h2>Integration</h2>
+            <label class="field">
+              <span>Integrator</span>
+              <select id="integrator">
+                <option value="verlet">Velocity Verlet (symplectic)</option>
+                <option value="euler">Forward Euler (unstable)</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Timestep Δt <strong id="dt-value">0.01</strong></span>
+              <input id="dt" type="range" min="0.0005" max="0.05" step="0.0005" value="0.008" />
+            </label>
+            <label class="field">
+              <span>Speed (steps/frame) <strong id="speed-value">2×</strong></span>
+              <input id="speed" type="range" min="1" max="12" step="1" value="2" />
+            </label>
+            <label class="field">
+              <span>Softening ε <strong id="softening-value">0.08</strong></span>
+              <input id="softening" type="range" min="0" max="1" step="0.01" value="0.08" />
+            </label>
+            <p class="hint">
+              Verlet keeps total energy bounded. Switch to Euler and raise Δt to see numerical energy drift.
+            </p>
+          </section>
+
+          <section class="panel">
+            <h2>Display</h2>
+            <div class="toggles">
+              <label class="check"><input type="checkbox" id="trails" checked /> Trails</label>
+              <label class="check"><input type="checkbox" id="labels" checked /> Labels</label>
+              <label class="check"><input type="checkbox" id="grid" /> Grid</label>
+              <label class="check"><input type="checkbox" id="follow" checked /> Follow barycenter</label>
+            </div>
+          </section>
+
+          <section class="panel stats">
+            <h2>Diagnostics</h2>
+            <dl class="stat-grid">
+              <div><dt>Time</dt><dd id="stat-time">0</dd></div>
+              <div><dt>Steps</dt><dd id="stat-steps">0</dd></div>
+              <div><dt>Bodies</dt><dd id="stat-bodies">0</dd></div>
+              <div><dt>Integrator</dt><dd id="stat-integrator">—</dd></div>
+              <div><dt>Kinetic K</dt><dd id="stat-k">0</dd></div>
+              <div><dt>Potential U</dt><dd id="stat-u">0</dd></div>
+              <div><dt>Total E</dt><dd id="stat-e" class="emphasis">0</dd></div>
+              <div>
+                <dt>|ΔE|/|E₀|</dt>
+                <dd id="stat-drift">0%</dd>
+              </div>
+            </dl>
+            <div class="chart-wrap">
+              <div class="chart-legend">
+                <span class="lg k">K kinetic</span>
+                <span class="lg u">U potential</span>
+                <span class="lg e">E total</span>
+              </div>
+              <canvas id="energy-chart" width="280" height="100"></canvas>
+            </div>
+          </section>
+
+          <section class="panel learn">
+            <h2>Physics notes</h2>
+            <ul>
+              <li>
+                Force law:
+                <code>F = G m₁ m₂ r̂ / r²</code>
+                with Plummer softening
+                <code>r² → r²+ε²</code>.
+              </li>
+              <li>
+                Mechanical energy
+                <code>E = K + U</code>
+                is conserved by Newtonian gravity. Integrators only approximate this.
+              </li>
+              <li>
+                <strong>Velocity Verlet</strong> is symplectic: long-term energy error stays bounded for fixed Δt.
+              </li>
+              <li>
+                <strong>Forward Euler</strong> is not — energy typically grows and orbits spiral outward.
+              </li>
+            </ul>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <span>2D N-body · O(N²) pairwise gravity · no external dependencies</span>
+        <a href="https://github.com/" id="repo-link" hidden>GitHub</a>
+      </footer>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
